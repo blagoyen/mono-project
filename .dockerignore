@@ -1,0 +1,11 @@
+.git
+.gitignore
+.gitattributes
+.github
+node_modules
+bin
+Dockerfile
+.dockerignore
+*.log
+*.md
+!README.md
