@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>mono. — Download video &amp; audio</title>
+  <meta name="description" content="A quiet little downloader. Paste a link from YouTube, TikTok, Instagram, X and more. Save it as a clean MP4 or MP3. No account, no ads, no clutter.">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css?v=1">
+  <script>
+    (function () {
+      document.documentElement.classList.add("js");
+      try {
+        if (localStorage.getItem("mono:theme") === "dark") {
+          document.documentElement.dataset.theme = "dark";
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <a class="skip-link" href="#app">Skip to the downloader</a>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top" aria-label="mono, home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 4v11m0 0 4.2-4.2M12 15l-4.2-4.2"/>
+            <path d="M4.5 19.5h15"/>
+          </svg>
+        </span>
+        <span class="brand-word">mono<span class="brand-dot">.</span></span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#how">How it works</a>
+        <a href="#faq">FAQ</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7Z"/>
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-head">
+          <p class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span> MP4 / MP3 — no sign-up, no ads</p>
+          <h1 class="hero-title">Download<br><em>anything.</em></h1>
+          <p class="lede">Paste a link from YouTube, TikTok, Instagram or X.<br class="lede-break"> Save it as a clean video or audio file — in seconds.</p>
+        </div>
+
+        <div class="downloader" id="app">
+          <form class="card" id="download-form" novalidate>
+            <div class="card-head">
+              <label class="field-label" for="url">Paste a link</label>
+              <span class="platform-pill" id="platform-pill" hidden>
+                <span class="platform-dot" aria-hidden="true"></span>
+                <span id="platform-name">YouTube</span>
+              </span>
+            </div>
+
+            <div class="url-shell">
+              <span class="url-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10.6 13.4a3.5 3.5 0 0 0 5 0l3-3a3.5 3.5 0 0 0-5-5l-1.3 1.3"/>
+                  <path d="M13.4 10.6a3.5 3.5 0 0 0-5 0l-3 3a3.5 3.5 0 0 0 5 5l1.3-1.3"/>
+                </svg>
+              </span>
+              <input
+                id="url"
+                name="url"
+                type="text"
+                inputmode="url"
+                autocomplete="off"
+                autocapitalize="off"
+                spellcheck="false"
+                placeholder="https://youtube.com/watch?v=…"
+                aria-describedby="hint"
+              >
+              <button class="paste-btn" id="paste-btn" type="button" aria-label="Paste link from clipboard">Paste</button>
+            </div>
+
+            <div class="controls">
+              <div class="seg" role="group" aria-label="File format">
+                <button type="button" class="seg-btn is-active" data-type="mp4" aria-pressed="true">MP4</button>
+                <button type="button" class="seg-btn" data-type="mp3" aria-pressed="false">MP3</button>
+              </div>
+
+              <div class="select-wrap">
+                <label class="sr-only" for="quality">Quality</label>
+                <select id="quality" name="quality"></select>
+                <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="m6 9 6 6 6-6"/>
+                </svg>
+              </div>
+
+              <button class="cta" id="submit-btn" type="submit">
+                <span id="cta-label">Download</span>
+                <svg class="cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 4v12m0 0 4.5-4.5M12 16l-4.5-4.5"/>
+                  <path d="M4.5 20h15"/>
+                </svg>
+              </button>
+            </div>
+
+            <p class="hint" id="hint">MP4 · 1080p · best available video + audio</p>
+            <div class="status" id="status" role="status" aria-live="polite" hidden>
+              <span class="status-mark" aria-hidden="true"></span>
+              <span id="status-text"></span>
+            </div>
+          </form>
+
+          <article class="preview" id="preview" hidden aria-label="Media preview">
+            <div class="thumb">
+              <img id="thumb-img" alt="" referrerpolicy="no-referrer" loading="lazy">
+              <div class="thumb-fallback" id="thumb-fallback" aria-hidden="true">
+                <span id="thumb-initial">Y</span>
+              </div>
+              <span class="duration" id="preview-duration" hidden>0:00</span>
+            </div>
+
+            <div class="preview-body">
+              <p class="preview-kicker" id="preview-kicker">YouTube</p>
+              <h3 class="preview-title" id="preview-title">Fetching details…</h3>
+              <p class="preview-meta" id="preview-meta">Just a moment</p>
+
+              <div class="progress-row" id="progress-row" hidden>
+                <div class="progress-track" role="progressbar" aria-label="Download progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress-track">
+                  <span class="progress-fill" id="progress-fill"></span>
+                </div>
+                <span class="progress-text" id="progress-text">0%</span>
+              </div>
+            </div>
+
+            <div class="preview-actions" id="preview-actions" hidden>
+              <button class="save-btn" id="save-btn" type="button" hidden>
+                <span id="save-label">Save file</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 4v12m0 0 4.5-4.5M12 16l-4.5-4.5"/>
+                  <path d="M4.5 20h15"/>
+                </svg>
+              </button>
+            </div>
+          </article>
+
+          <p class="preview-note" id="preview-note" hidden>
+            Preview mode — the interface is live, downloads are simulated. Run the local server for real files.
+          </p>
+        </div>
+      </div>
+
+      <div class="ticker" aria-hidden="true">
+        <div class="ticker-track">
+          <div class="ticker-group">
+            <span>YouTube</span><i></i><span>TikTok</span><i></i><span>Instagram</span><i></i><span>X</span><i></i><span>Facebook</span><i></i><span>Vimeo</span><i></i><span>SoundCloud</span><i></i><span>Reddit</span><i></i><span>Twitch</span><i></i><span>Dailymotion</span><i></i><span>Pinterest</span><i></i><span>+ 1,000 more</span><i></i>
+          </div>
+          <div class="ticker-group">
+            <span>YouTube</span><i></i><span>TikTok</span><i></i><span>Instagram</span><i></i><span>X</span><i></i><span>Facebook</span><i></i><span>Vimeo</span><i></i><span>SoundCloud</span><i></i><span>Reddit</span><i></i><span>Twitch</span><i></i><span>Dailymotion</span><i></i><span>Pinterest</span><i></i><span>+ 1,000 more</span><i></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="how">
+      <div class="wrap split">
+        <div class="section-intro" data-reveal>
+          <p class="label">01 — How it works</p>
+          <h2>Three steps.<br><em>Zero friction.</em></h2>
+          <p class="section-copy">No account, no pop-ups, no watermark. Just a link and a file.</p>
+        </div>
+
+        <ol class="steps">
+          <li data-reveal>
+            <span class="step-num">01</span>
+            <div>
+              <h3>Paste the link</h3>
+              <p>Drop in any public video URL. The title, duration and available quality are read automatically.</p>
+            </div>
+          </li>
+          <li data-reveal>
+            <span class="step-num">02</span>
+            <div>
+              <h3>Pick a format</h3>
+              <p>MP4 for video up to 4K, or MP3 at up to 320 kbps. Choose the quality that suits the moment.</p>
+            </div>
+          </li>
+          <li data-reveal>
+            <span class="step-num">03</span>
+            <div>
+              <h3>Keep it</h3>
+              <p>Hit download. The file is prepared on your machine and saved straight to your device.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section" id="why">
+      <div class="wrap">
+        <div class="features-head" data-reveal>
+          <div>
+            <p class="label">02 — Why mono</p>
+            <h2>Less noise.<br><em>More signal.</em></h2>
+          </div>
+          <p class="section-copy">Everything you need, nothing you don’t. The whole thing is one page, two formats and a single button.</p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature" data-reveal>
+            <div class="feature-top">
+              <span class="feature-index">A</span>
+              <svg class="feature-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M7 17 17 7M9 7h8v8"/>
+              </svg>
+            </div>
+            <div>
+              <h3>No account. Ever.</h3>
+              <p>No email, no password, no “continue with”. Open the page and use it.</p>
+            </div>
+          </article>
+
+          <article class="feature" data-reveal>
+            <div class="feature-top">
+              <span class="feature-index">B</span>
+              <svg class="feature-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M7 17 17 7M9 7h8v8"/>
+              </svg>
+            </div>
+            <div>
+              <h3>No ads. No trackers.</h3>
+              <p>One page, one job. Nothing follows you around the internet afterwards.</p>
+            </div>
+          </article>
+
+          <article class="feature" data-reveal>
+            <div class="feature-top">
+              <span class="feature-index">C</span>
+              <svg class="feature-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M7 17 17 7M9 7h8v8"/>
+              </svg>
+            </div>
+            <div>
+              <h3>Original quality</h3>
+              <p>Best available video and audio, merged cleanly. Audio is converted, never re-recorded.</p>
+            </div>
+          </article>
+
+          <article class="feature" data-reveal>
+            <div class="feature-top">
+              <span class="feature-index">D</span>
+              <svg class="feature-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M7 17 17 7M9 7h8v8"/>
+              </svg>
+            </div>
+            <div>
+              <h3>Private by design</h3>
+              <p>Files are temporary and deleted after an hour. No history, no logs, no copies.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <div class="wrap split">
+        <div class="section-intro" data-reveal>
+          <p class="label">03 — FAQ</p>
+          <h2>Good<br><em>questions.</em></h2>
+          <p class="section-copy">Still curious? The setup guide covers the technical parts.</p>
+        </div>
+
+        <div class="faq-list">
+          <details data-reveal>
+            <summary>Which sites are supported?<span class="plus" aria-hidden="true"></span></summary>
+            <div class="faq-body"><p>Anything <a href="https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md" target="_blank" rel="noopener">yt-dlp supports</a> — YouTube, TikTok, Instagram, X, Facebook, Vimeo, SoundCloud, Reddit, Twitch, Dailymotion and more than a thousand others. Playlists are intentionally ignored: one link, one file.</p></div>
+          </details>
+
+          <details data-reveal>
+            <summary>Is it really free?<span class="plus" aria-hidden="true"></span></summary>
+            <div class="faq-body"><p>Yes. The project is open source and runs locally. There is no account, no payment and no advertising — the only cost is the bandwidth of the machine running it.</p></div>
+          </details>
+
+          <details data-reveal>
+            <summary>What quality should I choose?<span class="plus" aria-hidden="true"></span></summary>
+            <div class="faq-body"><p>For archiving, pick the highest MP4 resolution the source offers. For sharing, 1080p is the sweet spot. For music and podcasts, 320 kbps MP3 is effectively transparent.</p></div>
+          </details>
+
+          <details data-reveal>
+            <summary>Where do my files go?<span class="plus" aria-hidden="true"></span></summary>
+            <div class="faq-body"><p>They are written to a temporary folder on the server, then streamed to your browser and deleted automatically after one hour. Nothing is uploaded anywhere else.</p></div>
+          </details>
+
+          <details data-reveal>
+            <summary>Can I download private or age-restricted videos?<span class="plus" aria-hidden="true"></span></summary>
+            <div class="faq-body"><p>No. Only public content that is accessible without an account is supported. Live streams and paid content are not available either.</p></div>
+          </details>
+
+          <details data-reveal>
+            <summary>Is this legal?<span class="plus" aria-hidden="true"></span></summary>
+            <div class="faq-body"><p>Download only what you own or have permission to save. Downloading copyrighted material can violate a platform’s terms of service and local law. You are responsible for how you use it.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a class="brand" href="#top" aria-label="mono, back to top">
+            <span class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 4v11m0 0 4.2-4.2M12 15l-4.2-4.2"/>
+                <path d="M4.5 19.5h15"/>
+              </svg>
+            </span>
+            <span class="brand-word">mono<span class="brand-dot">.</span></span>
+          </a>
+          <p>Video and audio, saved.<br>Black, white, and nothing in between.</p>
+        </div>
+
+        <div class="footer-nav">
+          <div class="footer-col">
+            <p class="footer-label">Product</p>
+            <a href="#app">Downloader</a>
+            <a href="#how">How it works</a>
+            <a href="#why">Why mono</a>
+          </div>
+          <div class="footer-col">
+            <p class="footer-label">Resources</p>
+            <a href="#faq">FAQ</a>
+            <a href="README.md">Setup guide</a>
+            <a href="https://github.com/yt-dlp/yt-dlp" target="_blank" rel="noopener">yt-dlp</a>
+          </div>
+        </div>
+      </div>
+
+      <p class="disclaimer">
+        <strong>Use it fairly.</strong> Only download content you own or have permission to save. Downloading copyrighted material may break a platform’s terms of service and local law. mono is a thin interface over yt-dlp and stores nothing.
+      </p>
+
+      <div class="footer-mark" aria-hidden="true">mono.</div>
+
+      <div class="footer-base">
+        <span>© <span id="year">2026</span> mono.</span>
+        <span>Made for the quiet web</span>
+      </div>
+    </div>
+  </footer>
+
+  <noscript>
+    <div class="noscript">mono needs JavaScript to read links and download files. Please enable it.</div>
+  </noscript>
+
+  <script src="assets/app.js?v=1"></script>
+</body>
+</html>
